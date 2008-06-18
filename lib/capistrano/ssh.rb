@@ -23,9 +23,6 @@ module Capistrano
       attr_accessor :xserver
     end
 
-    # The default port for SSH.
-    DEFAULT_PORT = 22
-
     # An abstraction to make it possible to connect to the server via public key
     # without prompting for the password. If the public key authentication fails
     # this will fall back to password authentication.
@@ -60,7 +57,8 @@ module Capistrano
 
       ssh_options        = (server.options[:ssh_options] || {}).merge(options[:ssh_options] || {})
       user               = server.user || options[:user] || ssh_options[:username] || ServerDefinition.default_user
-      ssh_options[:port] = server.port || options[:port] || ssh_options[:port] || DEFAULT_PORT
+      ssh_options[:port] = server.port || options[:port] || ssh_options[:port] || nil
+      ssh_options.delete(:port) if ssh_options[:port] == nil
 
       ssh_options.delete(:username)
 
